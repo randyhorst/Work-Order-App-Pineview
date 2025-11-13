@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mobile Work Order Form</title>
-    <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         /* Set up Inter font */
@@ -23,9 +25,10 @@
             
             /* 2. Reset the page for printing */
             body {
-                background-color: white !important; /* Force white background for printing */
-                margin: 0 !important; /* Remove body margins */
-                padding: 0 !important; /* Remove body padding */
+                background-color: white !important; /* Force white background */
+                margin: 0 !important;
+                padding: 0 !important;
+                color: black !important;
             }
 
             /* 3. Make the report container fill the page */
@@ -33,48 +36,82 @@
                 display: block !important;
                 width: 100%;
                 min-height: 100vh;
-                box-shadow: none !important; /* Remove any shadows */
-                padding: 30px; /* Standard print margins */
-                border: none;
-                border-radius: 0;
+                box-shadow: none !important; 
+                padding: 0 !important; 
+                border: none !important;
+                border-radius: 0 !important;
+                margin: 0 !important;
             }
             
             /* 4. Ensure text sections flow and wrap */
             .print-text {
-                white-space: pre-wrap; /* Respects line breaks from textareas */
-                color: #111827; /* Dark text for printing */
+                white-space: pre-wrap; /* Respects line breaks */
+                color: #000000 !important;
                 padding: 0;
                 border: none;
-                min-height: 0; /* Remove app-like min-height */
+                min-height: 0; 
             }
             
             /* 5. Style the photo grid for print */
             #report-photo-container {
                 display: grid;
-                grid-template-columns: repeat(2, 1fr); /* 2 columns for photos */
+                grid-template-columns: repeat(2, 1fr); /* 2 columns */
                 gap: 16px;
             }
             #report-photo-container img {
                 width: 100%;
                 height: auto;
-                border: 1px solid #d1d5db; /* Light border for photos */
+                border: 1px solid #e5e7eb;
                 border-radius: 4px;
-                page-break-inside: avoid; /* Don't split images across pages */
+                page-break-inside: avoid; 
             }
             
-            /* 6. Try to prevent page breaks in the header */
+            /* 6. Prevent page breaks in headers */
             #print-header, #print-info-grid {
                 page-break-inside: avoid;
             }
-            
-            /* 7. Ensure photo section doesn't start weirdly */
-            #report-photo-section {
-                break-before: auto; /* Let the browser decide if it needs a new page */
-            }
 
-            /* 8. Force removal of browser headers/footers */
+            /* 7. Inspection Table Styles */
+            .inspection-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+                font-size: 11px !important;
+            }
+            .inspection-table th {
+                border-bottom: 2px solid #000;
+                text-align: left;
+                padding: 4px;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+            .inspection-table td {
+                border-bottom: 1px solid #e5e7eb;
+                padding: 4px;
+                vertical-align: top;
+            }
+            .inspection-category-row td {
+                background-color: #f3f4f6;
+                font-weight: bold;
+                padding-top: 8px;
+                padding-bottom: 8px;
+            }
+            .check-cell {
+                width: 30px;
+                text-align: center;
+                font-family: monospace;
+                font-size: 14px;
+            }
+            
+            /* 8. Standardize text sizes for print */
+            h1 { font-size: 24px !important; }
+            h2 { font-size: 14px !important; margin-top: 20px !important; }
+            p, span, div { font-size: 12px !important; }
+            .text-lg { font-size: 14px !important; }
+
+            /* 9. Force removal of browser headers/margins */
             @page {
-                margin: 0; /* Remove default page margins */
+                margin: 0.5in; 
             }
         }
         
@@ -82,58 +119,110 @@
         textarea {
             resize: none;
         }
+        /* Checkbox size override for easier tapping */
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
     </style>
 </head>
 <body class="p-4 md:p-8 bg-gray-900 text-gray-100">
 
     <div id="app" class="max-w-3xl mx-auto">
 
-        <!-- --- WORK ORDER INPUT FORM (no-print) --- --><div id="form-view" class="no-print">
+        <!-- --- WORK ORDER INPUT FORM (no-print) --- -->
+        <div id="form-view" class="no-print">
             
-            <!-- Logo has been removed --><header class="text-center mb-8 pt-8"> <!-- Added padding-top --><h1 class="text-4xl font-extrabold text-white">Work Order Entry</h1>
+            <header class="text-center mb-8 pt-8"> 
+                <h1 class="text-4xl font-extrabold text-white">Work Order Entry</h1>
             </header>
 
             <div class="bg-gray-800 p-6 md:p-8 rounded-xl shadow-2xl space-y-6">
 
-                <!-- Unit & Time Details --><div class="grid grid-cols-2 gap-4">
+                <!-- Unit & Employee -->
+                <div class="grid grid-cols-2 gap-4">
                     <div class="col-span-2 sm:col-span-1">
                         <label for="unit-number" class="block text-sm font-medium text-gray-300">Unit #</label>
-                        <!-- FIX: Added appearance-none and inline style for height */ --><input type="text" id="unit-number" class="appearance-none mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 border bg-gray-700 text-white" style="height: 48px;" placeholder="e.g., 4400, 101, etc.">
+                        <input type="text" id="unit-number" class="appearance-none mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 border bg-gray-700 text-white" style="height: 48px;" placeholder="e.g., 4400">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="employee-name" class="block text-sm font-medium text-gray-300">Employee Name</label>
-                        <!-- FIX: Added appearance-none and inline style for height */ --><input type="text" id="employee-name" class="appearance-none mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 border bg-gray-700 text-white" style="height: 48px;" placeholder="Your Name">
+                        <input type="text" id="employee-name" class="appearance-none mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 border bg-gray-700 text-white" style="height: 48px;" placeholder="Your Name">
                     </div>
                 </div>
 
+                <!-- Date, Hrs, Km -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="date" class="block text-sm font-medium text-gray-300">Date</label>
-                        <!-- FIX: Added appearance-none and inline style for height */ --><input type="date" id="date" class="appearance-none mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 border bg-gray-700 text-white" style="height: 48px;">
+                        <input type="date" id="date" class="appearance-none mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 border bg-gray-700 text-white" style="height: 48px;">
                     </div>
                     <div>
                         <label for="hours" class="block text-sm font-medium text-gray-300">Hrs</label>
-                        <!-- FIX: Added appearance-none and inline style for height */ --><input type="number" id="hours" class="appearance-none mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 border bg-gray-700 text-white" style="height: 48px;" placeholder="0.0">
+                        <input type="number" id="hours" class="appearance-none mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 border bg-gray-700 text-white" style="height: 48px;" placeholder="0.0">
                     </div>
                     <div>
                         <label for="kilometers" class="block text-sm font-medium text-gray-300">Km</label>
-                        <!-- FIX: Added appearance-none and inline style for height */ --><input type="number" id="kilometers" class="appearance-none mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 border bg-gray-700 text-white" style="height: 48px;" placeholder="0">
+                        <input type="number" id="kilometers" class="appearance-none mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 border bg-gray-700 text-white" style="height: 48px;" placeholder="0">
                     </div>
                 </div>
 
-                <!-- What It Came In For --><div>
+                <!-- What It Came In For -->
+                <div>
                     <label for="came-in-for" class="block text-lg font-semibold text-white mb-2 mt-4">What It Came In For...</label>
-                    <textarea id="came-in-for" rows="6" class="mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-4 focus:border-indigo-500 focus:ring-indigo-500 border bg-gray-700 text-white" placeholder="Describe the issue, requested work, or condition of the unit."></textarea>
+                    <textarea id="came-in-for" rows="6" class="mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-4 focus:border-indigo-500 focus:ring-indigo-500 border bg-gray-700 text-white" placeholder="Describe the issue..."></textarea>
                 </div>
 
-                <!-- What Got Done --><div>
+                <!-- What Got Done -->
+                <div>
                     <label for="got-done" class="block text-lg font-semibold text-white mb-2 mt-4">What Got Done...</label>
-                    <textarea id="got-done" rows="10" class="mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-4 focus:border-indigo-500 focus:ring-indigo-500 border bg-gray-700 text-white" placeholder="Detail all work performed, parts used, and any next steps."></textarea>
+                    <textarea id="got-done" rows="10" class="mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-4 focus:border-indigo-500 focus:ring-indigo-500 border bg-gray-700 text-white" placeholder="Detail work performed..."></textarea>
                 </div>
 
-                <!-- Add Photos (Optional) --><div>
-                    <label for="photo-upload" class="block text-lg font-semibold text-white mb-2 mt-4">Add Photos (Optional)</label>
-                    <!-- Added 'multiple' attribute --><input type="file" id="photo-upload" accept="image/*" multiple class="block w-full text-sm text-gray-300
+                <!-- --- INSPECTION SECTION (Toggle) --- -->
+                <div class="border-t border-gray-700 pt-6 mt-6">
+                    <div class="flex items-center mb-4">
+                        <input id="toggle-inspection" type="checkbox" class="w-6 h-6 text-indigo-600 rounded border-gray-500 focus:ring-indigo-500 bg-gray-700" onchange="toggleInspectionUI()">
+                        <label for="toggle-inspection" class="ml-3 block text-lg font-bold text-white">Add Inspection Report?</label>
+                    </div>
+
+                    <!-- Hidden Container for Inspection Details -->
+                    <div id="inspection-ui" class="hidden space-y-4 pl-2 border-l-2 border-indigo-600">
+                        
+                        <!-- Dropdowns -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Equipment Type</label>
+                                <select id="equipment-type" class="block w-full rounded-lg border-gray-600 shadow-sm p-3 bg-gray-700 text-white" style="height: 48px;" onchange="renderChecklist()">
+                                    <option value="sxs_spray">SxS with Spray Tank</option>
+                                    <option value="pickup">Pickup Truck</option>
+                                    <option value="hydroseeder">Hydroseeder</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Interval</label>
+                                <select id="inspection-interval" class="block w-full rounded-lg border-gray-600 shadow-sm p-3 bg-gray-700 text-white" style="height: 48px;">
+                                    <option value="Daily">Daily</option>
+                                    <option value="Weekly">Weekly</option>
+                                    <option value="50 Hr">50 Hr</option>
+                                    <option value="250 Hr">250 Hr</option>
+                                    <option value="500 Hr">500 Hr</option>
+                                    <option value="Annual">Annual</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Checklist Container -->
+                        <div id="checklist-container" class="space-y-2 mt-4">
+                            <!-- Checklist items injected by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Photos -->
+                <div>
+                    <label for="photo-upload" class="block text-lg font-semibold text-white mb-2 mt-4">Add Photos / Reports (Optional)</label>
+                    <input type="file" id="photo-upload" accept="image/*" multiple class="block w-full text-sm text-gray-300
                         file:mr-4 file:py-2 file:px-4
                         file:rounded-lg file:border-0
                         file:text-sm file:font-semibold
@@ -141,69 +230,101 @@
                         hover:file:bg-indigo-700
                         file:cursor-pointer
                     ">
-                    <!-- Photo Preview Area is now a grid container --><div id="photo-preview-container" class="mt-4 grid grid-cols-2 gap-4">
-                        <!-- Preview images will be injected here by JavaScript --></div>
+                    <div id="photo-preview-container" class="mt-4 grid grid-cols-2 gap-4">
+                        <!-- Previews go here -->
+                    </div>
                 </div>
                 
-                <!-- Action Button --><div class="pt-4">
-                    <button id="generate-button" onclick="generatePrintView()" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                <!-- Generate Button -->
+                <div class="pt-4">
+                    <button onclick="generatePrintView()" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
                         Generate Print View (PDF)
                     </button>
                 </div>
-
             </div>
         </div>
 
-        <!-- --- NEW INVOICE-STYLE PRINT PREVIEW / PDF REPORT (Hidden by default) --- --><div id="print-preview" class="hidden bg-white text-gray-900 p-8">
+        <!-- --- INVOICE STYLE PRINT PREVIEW (Hidden on mobile, Visible on Print) --- -->
+        <div id="print-preview" class="hidden bg-white text-black p-8">
             <div class="flex flex-col h-full">
-                <!-- Header --><header id="print-header" class="text-center border-b border-gray-400 pb-2 mb-6">
-                    <h1 class="text-3xl font-bold text-gray-900">Work Order</h1>
+                
+                <!-- Header -->
+                <header id="print-header" class="border-b-2 border-black pb-4 mb-6">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <h1 class="text-3xl font-bold uppercase tracking-tight text-black">Work Order</h1>
+                        </div>
+                        <div class="text-right">
+                             <p class="text-sm text-gray-600">Pineview Vegetation Management</p>
+                        </div>
+                    </div>
                 </header>
 
-                <!-- NEW: Invoice-Style Info Grid --><div id="print-info-grid" class="grid grid-cols-3 gap-x-6 gap-y-2 mb-6 pb-4 border-b border-gray-300">
+                <!-- Info Grid -->
+                <div id="print-info-grid" class="grid grid-cols-3 gap-8 mb-8">
                     <div>
-                        <span class="block text-xs font-semibold uppercase text-gray-500">Unit #</span>
-                        <span id="report-unit" class="text-lg font-medium text-gray-900"></span>
-                    </div>
-                    <div>
-                        <span class="block text-xs font-semibold uppercase text-gray-500">Employee</span>
-                        <span id="report-employee" class="text-lg font-medium text-gray-900"></span>
+                        <span class="block text-xs font-bold uppercase text-gray-500 tracking-wider">Unit #</span>
+                        <span id="report-unit" class="block text-xl font-bold text-black mt-1"></span>
                     </div>
                     <div>
-                        <span class="block text-xs font-semibold uppercase text-gray-500">Date</span>
-                        <span id="report-date" class="text-lg font-medium text-gray-900"></span>
+                        <span class="block text-xs font-bold uppercase text-gray-500 tracking-wider">Employee</span>
+                        <span id="report-employee" class="block text-lg text-black mt-1"></span>
                     </div>
-                    <div class="col-start-2">
-                        <span class="block text-xs font-semibold uppercase text-gray-500">Hours</span>
-                        <span id="report-hours" class="text-lg font-medium text-gray-900"></span>
+                    <div>
+                        <span class="block text-xs font-bold uppercase text-gray-500 tracking-wider">Date</span>
+                        <span id="report-date" class="block text-lg text-black mt-1"></span>
                     </div>
-                    <div class="col-start-3">
-                        <span class="block text-xs font-semibold uppercase text-gray-500">Kilometers</span>
-                        <span id="report-kilometers" class="text-lg font-medium text-gray-900"></span>
+                    <div>
+                        <span class="block text-xs font-bold uppercase text-gray-500 tracking-wider">Hours</span>
+                        <span id="report-hours" class="block text-lg text-black mt-1"></span>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-bold uppercase text-gray-500 tracking-wider">Kilometers</span>
+                        <span id="report-kilometers" class="block text-lg text-black mt-1"></span>
                     </div>
                 </div>
 
-                <!-- What It Came In For --><section class="mb-8 flex-grow">
-                    <h2 class="text-base font-bold uppercase tracking-wider text-gray-700 mb-2">What It Came In For...</h2>
-                    <div id="report-came-in-for" class="print-text text-gray-800 text-sm leading-relaxed"></div>
+                <!-- Content Sections -->
+                <section class="mb-8">
+                    <h2 class="text-sm font-bold uppercase text-black border-b border-gray-300 pb-1 mb-3">What It Came In For</h2>
+                    <div id="report-came-in-for" class="print-text text-sm leading-relaxed"></div>
                 </section>
 
-                <!-- What Got Done --><section class="mb-8 flex-grow">
-                    <h2 class="text-base font-bold uppercase tracking-wider text-gray-700 mb-2">What Got Done...</h2>
-                    <div id="report-got-done" class="print-text text-gray-800 text-sm leading-relaxed"></div>
+                <section class="mb-8">
+                    <h2 class="text-sm font-bold uppercase text-black border-b border-gray-300 pb-1 mb-3">What Got Done</h2>
+                    <div id="report-got-done" class="print-text text-sm leading-relaxed"></div>
                 </section>
 
-                <!-- Attached Photos Section (hidden by default) --><section id="report-photo-section" class="hidden mb-8 flex-grow">
-                    <h2 class="text-base font-bold uppercase tracking-wider text-gray-700 mb-2 border-t border-gray-300 pt-4">Attached Photos</h2>
-                    <!-- Report photos will be injected here as a 2-col grid --><div id="report-photo-container" class="mt-4">
-                        <!-- Style for this is in the @media print CSS block --></div>
+                <!-- Inspection Report (Conditional) -->
+                <section id="report-inspection-section" class="hidden mb-8">
+                    <div class="flex justify-between items-center border-b border-gray-300 pb-1 mb-3">
+                        <h2 class="text-sm font-bold uppercase text-black">Inspection Report</h2>
+                        <span id="report-inspection-title" class="text-xs font-bold uppercase text-gray-500"></span>
+                    </div>
+                    <div id="report-inspection-container">
+                        <!-- Table injected here -->
+                    </div>
                 </section>
 
-                <!-- Print Controls (Visible only on screen, hidden when printing) --><div class="no-print flex space-x-4 pt-6 mt-auto border-t border-gray-300">
-                    <button onclick="window.print()" class="flex-1 py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out">
+                <!-- Photos -->
+                <section id="report-photo-section" class="hidden mb-8">
+                    <h2 class="text-sm font-bold uppercase text-black border-b border-gray-300 pb-1 mb-3">Attached Photos</h2>
+                    <div id="report-photo-container" class="mt-4">
+                        <!-- Photos injected here -->
+                    </div>
+                </section>
+
+                <!-- Footer -->
+                <footer class="mt-auto pt-8 border-t border-black text-center">
+                     <p class="text-xs text-gray-500">Generated via Pineview Mobile Work Order</p>
+                </footer>
+
+                <!-- On-Screen Buttons (Hidden when printing) -->
+                <div class="no-print flex space-x-4 pt-10 border-t border-gray-200 mt-10">
+                    <button onclick="window.print()" class="flex-1 py-3 px-4 rounded-lg font-medium text-white bg-green-600 hover:bg-green-700 shadow-lg">
                         Save as PDF / Print
                     </button>
-                    <button onclick="showFormView()" class="flex-1 py-3 px-4 border border-2 border-indigo-600 rounded-lg shadow-lg text-lg font-medium text-indigo-600 bg-white hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                    <button onclick="showFormView()" class="flex-1 py-3 px-4 rounded-lg font-medium text-indigo-600 bg-white border-2 border-indigo-600 hover:bg-indigo-50 shadow-lg">
                         &larr; Edit Details
                     </button>
                 </div>
@@ -213,88 +334,213 @@
     </div>
 
     <script>
-        // State storage for the form data
-        let formData = {};
-        
-        // Store blob URLs to revoke them later (good memory management)
-        let currentPhotoURLs = [];
-
-        // Helper to format the date for display
-        const formatDate = (dateString) => {
-            if (!dateString) return '';
-            try {
-                // Split yyyy-mm-dd
-                const parts = dateString.split('-');
-                if (parts.length !== 3) return dateString; // Fallback
-                const year = parts[0];
-                const monthIndex = parseInt(parts[1], 10) - 1; // Month is 0-indexed
-                const day = parseInt(parts[2], 10);
-                
-                // Create date in UTC to avoid timezone shifts
-                const dateObj = new Date(Date.UTC(year, monthIndex, day));
-                
-                const options = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
-                return dateObj.toLocaleDateString(undefined, options);
-
-            } catch (e) {
-                return dateString; // Return original if parsing fails
+        // --- CONFIGURATION: Checklist Definitions ---
+        const checklists = {
+            'sxs_spray': {
+                name: 'SxS with Spray Tank',
+                sections: [
+                    {
+                        title: 'General',
+                        items: [
+                            'Air Filter', 'Eng oil and filter', 'Fuel filters', 'Coolant', 
+                            'Front diff', 'Rear diff', 'Alternator belt', 'Park brake', 
+                            'Drive Belt (Deere 29mm width min.)', 'Battery and connections', 'Brakes', 
+                            'A-arms', 'Wheel bearings', 'Tie rods', 'Shocks', '4x4', 
+                            'Diff lock', 'Winch', 'Tires', 'Lights', 'Fire ext'
+                        ]
+                    },
+                    {
+                        title: 'Tank',
+                        items: ['Electrical', 'Plumbing', 'Nozzles']
+                    },
+                    {
+                        title: 'Honda Pump',
+                        items: ['Carb bowl clean', 'Air filter', 'Eng oil', 'Pull cord', 'Gearbox oil', 'Diaphragm pump oil']
+                    }
+                ]
+            },
+            'pickup': {
+                name: 'Pickup Truck',
+                sections: [
+                    {
+                        title: 'Under Hood',
+                        items: ['Engine Oil', 'Coolant Level', 'Power Steering Fluid', 'Brake Fluid', 'Belts & Hoses', 'Battery Terminals', 'Air Filter']
+                    },
+                    {
+                        title: 'Exterior/Underbody',
+                        items: ['Tire Pressure & Tread', 'Lug Nuts (Torque)', 'Lights (Head/Tail/Signal)', 'Driveline/U-Joints', 'Suspension', 'Brake Pads/Rotors']
+                    },
+                    {
+                        title: 'Interior/Safety',
+                        items: ['Glass/Mirrors', 'Wipers/Washers', 'Horn', 'Seatbelts', 'Fire Extinguisher', 'First Aid Kit']
+                    }
+                ]
+            },
+            'hydroseeder': {
+                name: 'Hydroseeder',
+                sections: [
+                    {
+                        title: 'Engine (Main)',
+                        items: ['Oil Level', 'Coolant', 'Air Filter', 'Fuel Filter']
+                    },
+                    {
+                        title: 'Pump System',
+                        items: ['Pump Oil', 'Agitator Bearings', 'Packing Seals', 'Hydraulic Hoses & Fittings', 'Valves operation']
+                    },
+                    {
+                        title: 'Trailer/Frame',
+                        items: ['Tires', 'Lights', 'Hitch/Chains', 'Breakaway Battery']
+                    }
+                ]
             }
         };
 
-        // Function to show the print preview and populate the data
-        function generatePrintView() {
-            // 1. Collect Data from Form
-            formData = {
-                unit: document.getElementById('unit-number').value.trim() || 'N/A',
-                employee: document.getElementById('employee-name').value.trim() || 'N/A',
-                date: document.getElementById('date').value.trim() || 'N/A',
-                hours: document.getElementById('hours').value.trim() || '0.0',
-                kilometers: document.getElementById('kilometers').value.trim() || '0',
-                cameInFor: document.getElementById('came-in-for').value.trim() || 'No entry provided.',
-                gotDone: document.getElementById('got-done').value.trim() || 'No work recorded.',
-            };
+        // --- UI LOGIC ---
 
-            // Basic validation for the Unit Number
-            if (formData.unit === 'N/A' || formData.unit === '') {
-                document.getElementById('form-view').classList.add('border-4', 'border-red-500', 'p-2', 'rounded-xl');
-                document.getElementById('unit-number').focus();
-                alert('Please enter a Unit # before generating the report. This is needed for filing.');
+        function toggleInspectionUI() {
+            const isChecked = document.getElementById('toggle-inspection').checked;
+            const ui = document.getElementById('inspection-ui');
+            if (isChecked) {
+                ui.classList.remove('hidden');
+                renderChecklist(); // Render default selection immediately
+            } else {
+                ui.classList.add('hidden');
+            }
+        }
+
+        function renderChecklist() {
+            const type = document.getElementById('equipment-type').value;
+            const container = document.getElementById('checklist-container');
+            container.innerHTML = ''; // Clear current
+
+            const data = checklists[type];
+            if (!data) return;
+
+            data.sections.forEach((section, secIdx) => {
+                // Section Header
+                const header = document.createElement('h3');
+                header.className = 'text-indigo-300 font-bold uppercase text-xs mt-4 mb-2 tracking-wider';
+                header.textContent = section.title;
+                container.appendChild(header);
+
+                // Section Items
+                section.items.forEach((item, itemIdx) => {
+                    const row = document.createElement('div');
+                    row.className = 'flex items-center space-x-3 mb-2 bg-gray-750 p-2 rounded';
+                    
+                    // Unique ID for inputs
+                    const checkId = `chk-${type}-${secIdx}-${itemIdx}`;
+                    const noteId = `note-${type}-${secIdx}-${itemIdx}`;
+
+                    row.innerHTML = `
+                        <div class="flex-shrink-0">
+                            <input type="checkbox" id="${checkId}" class="w-6 h-6 text-green-500 rounded focus:ring-green-500 bg-gray-600 border-gray-500">
+                        </div>
+                        <div class="flex-grow">
+                            <label for="${checkId}" class="text-sm text-white block">${item}</label>
+                        </div>
+                        <div class="flex-grow w-1/2">
+                            <input type="text" id="${noteId}" placeholder="Notes (optional)" class="w-full text-xs bg-gray-600 border-none rounded text-gray-200 placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 py-1 px-2">
+                        </div>
+                    `;
+                    container.appendChild(row);
+                });
+            });
+        }
+
+        // --- GENERATE REPORT LOGIC ---
+
+        const formatDate = (dateString) => {
+            if (!dateString) return '';
+            try {
+                const parts = dateString.split('-');
+                if (parts.length !== 3) return dateString;
+                const dateObj = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
+                return dateObj.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+            } catch (e) { return dateString; }
+        };
+
+        function generatePrintView() {
+            const getVal = (id) => document.getElementById(id).value.trim();
+            const unit = getVal('unit-number');
+            
+            if (!unit) {
+                alert('Please enter a Unit # before generating the report.');
                 return;
             }
-            document.getElementById('form-view').classList.remove('border-4', 'border-red-500', 'p-2', 'rounded-xl');
 
-            // 2. Populate the Print Preview
-            document.getElementById('report-unit').textContent = formData.unit;
-            document.getElementById('report-employee').textContent = formData.employee;
-            document.getElementById('report-date').textContent = formatDate(formData.date);
-            document.getElementById('report-hours').textContent = formData.hours;
-            document.getElementById('report-kilometers').textContent = formData.kilometers;
-            document.getElementById('report-came-in-for').textContent = formData.cameInFor;
-            document.getElementById('report-got-done').textContent = formData.gotDone;
+            // 1. Populate Basic Info
+            document.getElementById('report-unit').textContent = unit || 'N/A';
+            document.getElementById('report-employee').textContent = getVal('employee-name') || 'N/A';
+            document.getElementById('report-date').textContent = formatDate(getVal('date'));
+            document.getElementById('report-hours').textContent = getVal('hours') || '0.0';
+            document.getElementById('report-kilometers').textContent = getVal('kilometers') || '0';
+            document.getElementById('report-came-in-for').textContent = getVal('came-in-for') || 'No entry provided.';
+            document.getElementById('report-got-done').textContent = getVal('got-done') || 'No work recorded.';
 
-            // 3. Handle Multiple Optional Photos
+            // 2. Handle Inspection Report
+            const inspectionSection = document.getElementById('report-inspection-section');
+            const inspectionContainer = document.getElementById('report-inspection-container');
+            const isInspectionEnabled = document.getElementById('toggle-inspection').checked;
+
+            if (isInspectionEnabled) {
+                inspectionSection.classList.remove('hidden');
+                const typeKey = document.getElementById('equipment-type').value;
+                const interval = document.getElementById('inspection-interval').value;
+                const checklistData = checklists[typeKey];
+
+                // Set Title
+                document.getElementById('report-inspection-title').textContent = `${checklistData.name} (${interval})`;
+
+                // Build Table
+                let tableHTML = `<table class="inspection-table"><thead><tr><th class="w-8">OK</th><th>Item</th><th>Notes</th></tr></thead><tbody>`;
+
+                checklistData.sections.forEach((section, secIdx) => {
+                    // Section Header Row
+                    tableHTML += `<tr class="inspection-category-row"><td colspan="3">${section.title}</td></tr>`;
+                    
+                    section.items.forEach((item, itemIdx) => {
+                        const checkId = `chk-${typeKey}-${secIdx}-${itemIdx}`;
+                        const noteId = `note-${typeKey}-${secIdx}-${itemIdx}`;
+                        
+                        const isChecked = document.getElementById(checkId).checked;
+                        const note = document.getElementById(noteId).value.trim();
+                        
+                        // Checkmark symbol
+                        const checkMark = isChecked ? '✓' : '';
+
+                        tableHTML += `
+                            <tr>
+                                <td class="check-cell font-bold">${checkMark}</td>
+                                <td>${item}</td>
+                                <td class="text-gray-600 italic">${note}</td>
+                            </tr>
+                        `;
+                    });
+                });
+                tableHTML += `</tbody></table>`;
+                inspectionContainer.innerHTML = tableHTML;
+
+            } else {
+                inspectionSection.classList.add('hidden');
+            }
+
+            // 3. Handle Photos
             const previewContainer = document.getElementById('photo-preview-container');
             const reportPhotoSection = document.getElementById('report-photo-section');
             const reportPhotoContainer = document.getElementById('report-photo-container');
-
-            // Clear any old photos from the report
-            reportPhotoContainer.innerHTML = '';
             
-            const previewImages = previewContainer.querySelectorAll('img');
+            reportPhotoContainer.innerHTML = '';
+            const images = previewContainer.querySelectorAll('img');
 
-            if (previewImages.length > 0) {
-                // If photos exist, show the section
+            if (images.length > 0) {
                 reportPhotoSection.classList.remove('hidden');
-                
-                // Loop through all preview images and copy them to the report
-                for (const previewImage of previewImages) {
+                images.forEach(img => {
                     const reportImg = document.createElement('img');
-                    reportImg.src = previewImage.src;
-                    // Note: Styling for this is handled by the @media print CSS block
+                    reportImg.src = img.src;
                     reportPhotoContainer.appendChild(reportImg);
-                }
+                });
             } else {
-                // If no photos, hide the section
                 reportPhotoSection.classList.add('hidden');
             }
 
@@ -303,63 +549,45 @@
             document.getElementById('print-preview').classList.remove('hidden');
         }
 
-        // Function to switch back to the form view
         function showFormView() {
             document.getElementById('print-preview').classList.add('hidden');
             document.getElementById('form-view').classList.remove('hidden', 'no-print');
-            document.getElementById('unit-number').focus();
         }
 
-        // Event listener for multiple photo uploads
-        document.getElementById('photo-upload').addEventListener('change', function(event) {
-            const previewContainer = document.getElementById('photo-preview-container');
-            
-            // Clear old previews and revoke old blob URLs
-            previewContainer.innerHTML = '';
-            currentPhotoURLs.forEach(url => URL.revokeObjectURL(url));
-            currentPhotoURLs = []; // Reset the array
-
-            if (event.target.files && event.target.files.length > 0) {
-                for (const file of event.target.files) {
-                    // Create a new blob URL
-                    const photoURL = URL.createObjectURL(file);
-                    currentPhotoURLs.push(photoURL); // Store it for later cleanup
-                    
-                    // Create and append the new image preview
+        // Photo Upload Handler
+        document.getElementById('photo-upload').addEventListener('change', function(e) {
+            const container = document.getElementById('photo-preview-container');
+            container.innerHTML = ''; // Clear old
+            if (e.target.files) {
+                Array.from(e.target.files).forEach(file => {
+                    const url = URL.createObjectURL(file);
                     const img = document.createElement('img');
-                    img.src = photoURL;
+                    img.src = url;
                     img.className = 'w-full h-auto rounded-lg border-2 border-gray-600 object-cover';
-                    previewContainer.appendChild(img);
-                }
+                    container.appendChild(img);
+                });
             }
         });
 
-        // Initialize form with today's date
-        window.onload = function() {
-            const today = new Date();
-            // Format to YYYY-MM-DD for the input[type="date"]
-            const year = today.getFullYear();
-            const month = (today.getMonth() + 1).toString().padStart(2, '0');
-            const day = today.getDate().toString().padStart(2, '0');
-            document.getElementById('date').value = `${year}-${month}-${day}`;
+        // Set Today's Date
+        window.onload = () => {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
         };
 
-        // A simple custom alert replacement function
-        function alert(message) {
-            if (document.getElementById('custom-alert')) return;
-            const alertDiv = document.createElement('div');
-            alertDiv.id = 'custom-alert';
-            alertDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-            alertDiv.innerHTML = `
-                <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm mx-auto">
-                    <h3 class="text-xl font-bold mb-3 text-red-600">Error</h3>
-                    <p class="text-gray-700 mb-4">${message}</p>
-                    <button onclick="this.parentNode.parentNode.remove()" class="w-full py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">OK</button>
+        // Custom Alert
+        window.alert = function(message) {
+            const div = document.createElement('div');
+            div.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4';
+            div.innerHTML = `
+                <div class="bg-white p-6 rounded-lg max-w-sm w-full">
+                    <h3 class="text-lg font-bold text-red-600 mb-2">Required</h3>
+                    <p class="text-gray-800 mb-4">${message}</p>
+                    <button onclick="this.closest('div.fixed').remove()" class="w-full bg-indigo-600 text-white py-2 rounded">OK</button>
                 </div>
             `;
-            document.body.appendChild(alertDiv);
-            alertDiv.querySelector('button').focus();
-        }
+            document.body.appendChild(div);
+        };
     </script>
 </body>
 </html>
