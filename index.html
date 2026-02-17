@@ -37,6 +37,7 @@
         
         textarea { resize: none; }
         input[type="checkbox"] { width: 20px; height: 20px; }
+        input[type="date"] { -webkit-appearance: none; appearance: none; min-height: 48px; max-height: 48px; box-sizing: border-box; }
     </style>
 </head>
 <body class="p-4 md:p-8 bg-gray-900 text-gray-100">
@@ -51,20 +52,20 @@
             <div class="bg-gray-800 p-6 md:p-8 rounded-xl shadow-2xl space-y-6">
 
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-2 sm:col-span-1">
+                    <div>
                         <label for="unit-number" class="block text-sm font-medium text-gray-300">Unit #</label>
                         <input type="text" id="unit-number" class="mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-3 bg-gray-700 text-white border" style="height: 48px;" placeholder="e.g., SVL 75-3">
                     </div>
-                    <div class="col-span-2 sm:col-span-1">
+                    <div>
                         <label for="employee-name" class="block text-sm font-medium text-gray-300">Employee Name</label>
                         <input type="text" id="employee-name" class="mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-3 bg-gray-700 text-white border" style="height: 48px;" placeholder="Your Name">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-3 gap-4">
                     <div>
                         <label for="date" class="block text-sm font-medium text-gray-300">Date</label>
-                        <input type="date" id="date" class="mt-1 block w-full rounded-lg border-gray-600 shadow-sm p-3 bg-gray-700 text-white border" style="height: 48px;">
+                        <input type="date" id="date" class="mt-1 block w-full rounded-lg border-gray-600 bg-gray-700 text-white border" style="-webkit-appearance: none; appearance: none; height: 48px; padding: 0 12px; line-height: 48px;">
                     </div>
                     <div>
                         <label for="hours" class="block text-sm font-medium text-gray-300">Hrs</label>
@@ -271,15 +272,66 @@
                 name: 'Hydroseeder',
                 sections: [
                     {
-                        title: 'Engine (Main)',
+                        title: '— SEMI TRUCK — Engine & Cab',
+                        items: [
+                            'Engine Oil Level',
+                            'Coolant Level & Condition',
+                            'Power Steering Fluid',
+                            'Windshield Washer Fluid',
+                            'Air Filter Restriction Indicator',
+                            'Fan Belt & Serpentine Belt Condition',
+                            'Battery Terminals & Charge',
+                            'Fuel Level',
+                            'Cab/Sleeper Mounts & Latches',
+                            'Windshield & Mirrors (Clean/Unobstructed)',
+                            'Horn',
+                            'Wipers & Washers',
+                            'Seatbelt & Cab Safety Equipment',
+                            'Fire Extinguisher (Cab)',
+                            'All Gauges & Warning Lights (Functional)'
+                        ]
+                    },
+                    {
+                        title: '— SEMI TRUCK — Brakes & Suspension',
+                        items: [
+                            'Air Brake System – Build-up & Hold Test',
+                            'Low Air Warning Buzzer/Light',
+                            'Spring Brakes (Emergency/Parking)',
+                            'Brake Lining & Drum/Rotor Condition',
+                            'Slack Adjusters (Auto/Manual)',
+                            'Air Lines & Glad Hands (Leaks/Chafing)',
+                            'Front Steering Axle – King Pins & Tie Rods',
+                            'Leaf Springs / Air Bags – Cracks or Leaks',
+                            'Shock Absorbers',
+                            'U-Bolts & Spring Hangers',
+                            'Wheel Seals (No Leaks)'
+                        ]
+                    },
+                    {
+                        title: '— SEMI TRUCK — Lights & Electrical',
+                        items: [
+                            'Headlights (High & Low Beam)',
+                            'Tail Lights & Brake Lights',
+                            'Turn Signals (Front & Rear)',
+                            'Hazard/4-Way Flashers',
+                            'Clearance & Marker Lights',
+                            'Reverse/Backup Lights & Alarm',
+                            'DOT Reflective Tape (Condition)',
+                            'ABS Warning Light (Clears After Start)',
+                            '7-Pin Trailer Connector (Clean/Functional)',
+                            'Tractor Protection Valve'
+                        ]
+                    },
+                    {
+                        title: '— HYDROSEEDER SKID — Engine (Main)',
                         items: ['Oil Level', 'Coolant', 'Air Filter', 'Fuel Filter']
                     },
                     {
-                        title: 'Pump System',
+                        title: '— HYDROSEEDER SKID — Pump System',
                         items: ['Pump Oil', 'Agitator Bearings', 'Packing Seals', 'Hydraulic Hoses & Fittings', 'Valves operation']
                     },
                     {
-                        title: 'Trailer/Frame',
+                        title: '— HYDROSEEDER SKID — Trailer/Frame',
                         items: ['Tires', 'Lights', 'Hitch/Chains', 'Breakaway Battery']
                     }
                 ]
@@ -353,7 +405,7 @@
                     section.items.forEach((item, itemIdx) => {
                         const isChecked = document.getElementById(`chk-${typeKey}-${secIdx}-${itemIdx}`).checked;
                         const note = document.getElementById(`note-${typeKey}-${secIdx}-${itemIdx}`).value;
-                        tableHTML += `<tr><td class="check-cell">${isChecked ? '✓' : ''}</td><td>${item}</td><td class="italic">${note}</td></tr>`;
+                        tableHTML += `<tr><td class="check-cell">${isChecked ? 'âœ“' : ''}</td><td>${item}</td><td class="italic">${note}</td></tr>`;
                     });
                 });
                 tableHTML += `</tbody></table>`;
