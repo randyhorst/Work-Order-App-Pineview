@@ -216,15 +216,27 @@
                 sections: [
                     {
                         title: 'Under Hood',
-                        items: ['Engine Oil', 'Coolant Level', 'Power Steering Fluid', 'Brake Fluid', 'Belts & Hoses', 'Battery Terminals', 'Air Filter']
+                        items: ['Engine Oil', 'Coolant Level', 'Power Steering Fluid', 'Brake Fluid', 'Transmission Oil Level', 'Belts & Hoses', 'Battery Terminals', 'Air Filter', 'Rads (Clean blown out)', 'Exhaust', 'Engine Light/Codes']
                     },
                     {
-                        title: 'Exterior/Underbody',
-                        items: ['Tire Pressure & Tread', 'Lug Nuts (Torque)', 'Lights (Head/Tail/Signal)', 'Driveline/U-Joints', 'Suspension', 'Brake Pads/Rotors']
+                        title: 'Drivetrain & Suspension',
+                        items: ['Transfer Case', 'Front Axle Seals', 'Rear Axle Seals', 'Driveline/U-Joints', 'Front Suspension', 'Shocks', 'U-bolts', 'Leafs', 'Wheel Bearings', 'Ball Joints']
+                    },
+                    {
+                        title: 'Wheels & Brakes',
+                        items: ['Tire Pressure & Tread', 'Lug Nuts (Torque)', 'Spare Tire (present, aired up?)', 'Brake Pads/Rotors', 'Brake Life']
+                    },
+                    {
+                        title: 'Exterior & Lighting',
+                        items: ['Lights (Head/Tail/Signal)', 'Windshield', 'Trailer Plug Test', 'Hitch', 'Decals/Logos']
                     },
                     {
                         title: 'Interior/Safety',
-                        items: ['Glass/Mirrors', 'Wipers/Washers', 'Horn', 'Seatbelts', 'Fire Extinguisher', 'First Aid Kit']
+                        items: ['Glass/Mirrors', 'Wipers Working, Washer Fluid Topped Up, Working', 'Horn', 'Seatbelts', 'Fire Extinguisher', 'First Aid', 'Cleaned Interior']
+                    },
+                    {
+                        title: 'Field Readiness',
+                        items: ['Rigged for Field Work']
                     }
                 ]
             },
@@ -405,7 +417,7 @@
                     section.items.forEach((item, itemIdx) => {
                         const isChecked = document.getElementById(`chk-${typeKey}-${secIdx}-${itemIdx}`).checked;
                         const note = document.getElementById(`note-${typeKey}-${secIdx}-${itemIdx}`).value;
-                        tableHTML += `<tr><td class="check-cell">${isChecked ? 'âœ“' : ''}</td><td>${item}</td><td class="italic">${note}</td></tr>`;
+                        tableHTML += `<tr><td class="check-cell">${isChecked ? '✓' : ''}</td><td>${item}</td><td class="italic">${note}</td></tr>`;
                     });
                 });
                 tableHTML += `</tbody></table>`;
