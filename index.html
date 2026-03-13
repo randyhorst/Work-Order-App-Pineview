@@ -219,7 +219,7 @@
                 sections: [
                     {
                         title: 'Under Hood',
-                        items: ['Engine Oil', 'Coolant Level', 'Power Steering Fluid', 'Brake Fluid', 'Transmission Oil Level', 'Belts & Hoses', 'Battery Terminals', 'Air Filter', 'Rads (Clean blown out)', 'Exhaust', 'Engine Light/Codes']
+                        items: ['Engine Oil', 'Coolant Level', 'Power Steering Fluid', 'Brake Fluid', 'Transmission Oil Level', 'Belts & Hoses', 'Battery Terminals', 'Air Filter', 'Cabin Air Filter', 'Rads (Clean blown out)', 'Exhaust', 'Engine Light/Codes']
                     },
                     {
                         title: 'Drivetrain & Suspension',
@@ -364,10 +364,13 @@
             }
         }
 
+        let customItemCounter = 0;
+
         function renderChecklist() {
             const type = document.getElementById('equipment-type').value;
             const container = document.getElementById('checklist-container');
             container.innerHTML = ''; 
+            customItemCounter = 0;
 
             const data = checklists[type];
             if (!data) return;
@@ -391,6 +394,47 @@
                     container.appendChild(row);
                 });
             });
+
+            // Add Custom Items Section
+            const customHeader = document.createElement('h3');
+            customHeader.className = 'text-yellow-400 font-bold uppercase text-xs mt-6 mb-2 tracking-wider';
+            customHeader.textContent = 'Custom Items';
+            container.appendChild(customHeader);
+
+            const customContainer = document.createElement('div');
+            customContainer.id = 'custom-items-container';
+            customContainer.className = 'space-y-2';
+            container.appendChild(customContainer);
+
+            const addButton = document.createElement('button');
+            addButton.type = 'button';
+            addButton.className = 'mt-2 px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg text-sm font-medium transition flex items-center gap-2';
+            addButton.innerHTML = '<span class="text-lg">+</span> Add Custom Item';
+            addButton.onclick = addCustomItem;
+            container.appendChild(addButton);
+        }
+
+        function addCustomItem() {
+            const customContainer = document.getElementById('custom-items-container');
+            const customId = `custom-${customItemCounter++}`;
+            
+            const row = document.createElement('div');
+            row.className = 'flex items-center space-x-3 mb-2 bg-gray-700 p-2 rounded border border-yellow-600';
+            row.id = `custom-row-${customId}`;
+            row.innerHTML = `
+                <div class="flex-shrink-0"><input type="checkbox" id="chk-${customId}" class="w-6 h-6 text-green-500 rounded bg-gray-600 border-gray-500"></div>
+                <div class="flex-grow"><input type="text" id="item-${customId}" placeholder="Enter custom item name..." class="w-full text-sm bg-gray-600 border-none rounded text-white py-1 px-2"></div>
+                <div class="flex-grow w-1/2"><input type="text" id="note-${customId}" placeholder="Notes" class="w-full text-xs bg-gray-600 border-none rounded text-gray-200 py-1 px-2"></div>
+                <button type="button" onclick="removeCustomItem('${customId}')" class="flex-shrink-0 text-red-500 hover:text-red-700 font-bold text-xl px-2">×</button>
+            `;
+            customContainer.appendChild(row);
+        }
+
+        function removeCustomItem(customId) {
+            const row = document.getElementById(`custom-row-${customId}`);
+            if (row) {
+                row.remove();
+            }
         }
 
         function generatePrintView() {
@@ -423,6 +467,26 @@
                         tableHTML += `<tr><td class="check-cell">${isChecked ? '✓' : ''}</td><td>${item}</td><td class="italic">${note}</td></tr>`;
                     });
                 });
+                
+                // Add custom items to the report
+                const customContainer = document.getElementById('custom-items-container');
+                if (customContainer && customContainer.children.length > 0) {
+                    tableHTML += `<tr class="inspection-category-row"><td colspan="3">Custom Items</td></tr>`;
+                    Array.from(customContainer.children).forEach(row => {
+                        const customId = row.id.replace('custom-row-', '');
+                        const checkbox = document.getElementById(`chk-${customId}`);
+                        const itemInput = document.getElementById(`item-${customId}`);
+                        const noteInput = document.getElementById(`note-${customId}`);
+                        
+                        if (itemInput && itemInput.value.trim()) {
+                            const isChecked = checkbox ? checkbox.checked : false;
+                            const itemName = itemInput.value.trim();
+                            const note = noteInput ? noteInput.value : '';
+                            tableHTML += `<tr><td class="check-cell">${isChecked ? '✓' : ''}</td><td>${itemName}</td><td class="italic">${note}</td></tr>`;
+                        }
+                    });
+                }
+                
                 tableHTML += `</tbody></table>`;
                 document.getElementById('report-inspection-container').innerHTML = tableHTML;
             } else {
